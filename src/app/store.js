@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import transactionsReducer from '../features/transactions/transactionSlice';
+import { apiSlice } from '../features/api/apiSlice';
+import authSliceReducer from '../features/auth/authSlice';
+import conversationSliceReducer from '../features/conversation/conversationSlice';
+import messagesSliceReducer from '../features/messages/messagesSlice';
 
 export const store = configureStore({
-  reducer: {
-    transaction: transactionsReducer,
-  },
+    reducer: {
+		[apiSlice.reducerPath]: apiSlice.reducer,
+		auth: authSliceReducer,
+		conversation: conversationSliceReducer,
+		messages: messagesSliceReducer,
+    },
+	devTools: process.env.NODE_ENV !== 'production',
+	middleware: (getMiddlewares) => getMiddlewares().concat(apiSlice.middleware),
 });

@@ -1,15 +1,27 @@
-import Balance from "./components/Balance";
-import Form from "./components/Form";
-import Layout from "./components/Layout";
-import Transactions from "./components/Transactions/Transactions";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import useAuthCheck from "./hooks/useAuthCheck";
+import Conversation from "./pages/Conversation";
+import Inbox from "./pages/Inbox";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import PrivateRoute from "./route/PrivateRoute";
+import PublicRoute from "./route/PublicRoute";
 
 function App() {
-    return (
-        <Layout>
-            <Balance />
-            <Form />
-            <Transactions />
-        </Layout>
+    const checkUser = useAuthCheck();
+    return !checkUser ? <p>Checking Authentication</p> : (
+        <Router>
+            <Routes>
+                <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+                <Route path="/register" element={<PublicRoute> <Register /> </PublicRoute>} />
+                <Route path="/inbox" element={
+                    <PrivateRoute >
+                        <Conversation />
+                    </PrivateRoute>
+                    } />
+                <Route path="/inbox/:id" element={<PrivateRoute> <Inbox /> </PrivateRoute>} />
+            </Routes>
+        </Router>
     );
 }
 
